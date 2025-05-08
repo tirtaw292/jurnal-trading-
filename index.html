@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Journal Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-container">
+        <div class="login-box">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <h1>Trading Journal Pro</h1>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="username" placeholder="Your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" placeholder="Your password" required>
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <p id="login-error" class="error-message"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app-content" style="display:none;">
+        <header>
+            <h1><i class="fas fa-book"></i> Trading Journal</h1>
+            <div class="header-actions">
+                <button id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
+                <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- Tabs Navigation -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="journal"><i class="fas fa-plus-circle"></i> Add Trade</button>
+                <button class="tab-btn" data-tab="trades"><i class="fas fa-list"></i> Trade History</button>
+                <button class="tab-btn" data-tab="stats"><i class="fas fa-chart-pie"></i> Statistics</button>
+                <button class="tab-btn" data-tab="calendar"><i class="fas fa-calendar-alt"></i> P/L Calendar</button>
+                <button id="fundamental-btn" class="tab-btn">
+                    <i class="fas fa-globe"></i> Fundamental
+                </button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div id="journal" class="tab-content active">
+                <h3>Add Trade <span id="edit-indicator" style="display:none;">
+            <i class="fas fa-edit"></i> Editing Trade
+        </span></h3>
+                <form id="trade-form">
+                    <div class="form-grid">
+                        <!-- Trade Basics -->
+                        <div class="form-section">
+                            <h3><i class="fas fa-info-circle"></i> Trade Details</h3>
+                            <div class="form-group">
+                                <label for="trade-date">Date</label>
+                                <input type="date" id="trade-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="currency-pair">Pair</label>
+                                <select id="currency-pair" required>
+                                    <optgroup label="Major Pairs">
+                                        <option value="EUR/USD">EUR/USD</option>
+                                        <option value="USD/JPY">USD/JPY</option>
+                                        <option value="GBP/USD">GBP/USD</option>
+                                        <option value="USD/CHF">USD/CHF</option>
+                                        <option value="AUD/USD">AUD/USD</option>
+                                        <option value="USD/CAD">USD/CAD</option>
+                                        <option value="NZD/USD">NZD/USD</option>
+                                    </optgroup>
+                                    <optgroup label="Minor Pairs">
+                                        <option value="EUR/GBP">EUR/GBP</option>
+                                        <option value="EUR/JPY">EUR/JPY</option>
+                                        <option value="EUR/AUD">EUR/AUD</option>
+                                        <option value="EUR/CAD">EUR/CAD</option>
+                                        <option value="EUR/CHF">EUR/CHF</option>
+                                        <option value="EUR/NZD">EUR/NZD</option>
+                                        <option value="GBP/JPY">GBP/JPY</option>
+                                        <option value="GBP/AUD">GBP/AUD</option>
+                                        <option value="GBP/CAD">GBP/CAD</option>
+                                        <option value="GBP/CHF">GBP/CHF</option>
+                                        <option value="GBP/NZD">GBP/NZD</option>
+                                        <option value="CHF/JPY">CHF/JPY</option>
+                                        <option value="CAD/JPY">CAD/JPY</option>
+                                        <option value="AUD/JPY">AUD/JPY</option>
+                                        <option value="NZD/JPY">NZD/JPY</option>
+                                    </optgroup>
+                                    <optgroup label="Metals">
+                                        <option value="XAU/USD">Gold (XAU/USD)</option>
+                                        <option value="XAG/USD">Silver (XAG/USD)</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="trade-type">Type</label>
+                                <select id="trade-type" required>
+                                    <option value="buy">Buy</option>
+                                    <option value="sell">Sell</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Price Levels -->
+                        <div class="form-section">
+                            <h3><i class="fas fa-tag"></i> Price Levels</h3>
+                            <div class="form-group">
+                                <label for="entry-price">Entry Price</label>
+                                <input type="number" step="0.00001" id="entry-price" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="exit-price">Exit Price</label>
+                                <input type="number" step="0.00001" id="exit-price" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="position-size">Size (Lots)</label>
+                                <input type="number" step="0.01" id="position-size" value="0.1" required>
+                            </div>
+                        </div>
+
+                        <!-- Risk Management -->
+                        <div class="form-section">
+                            <h3><i class="fas fa-shield-alt"></i> Risk Management</h3>
+                            <div class="form-group">
+                                <label for="account-balance">Balance ($)</label>
+                                <input type="number" step="1" id="account-balance" value="1000" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="risk-percent">Risk (%)</label>
+                                <input type="number" step="0.1" id="risk-percent" value="1" min="0.1" max="100" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="take-profit">Take Profit (Price)</label>
+                                    <input type="number" step="0.00001" id="take-profit" placeholder="Optional">
+                                </div>
+                                <div class="form-group">
+                                    <label for="stop-loss">Stop Loss (Price)</label>
+                                    <input type="number" step="0.00001" id="stop-loss" placeholder="Required" required>
+                                </div>
+                            </div>
+                            <div class="form-group calculation-result">
+                                <label>Risk/Reward</label>
+                                <div id="risk-reward-ratio">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <h4>Pips</h4>
+                            <div id="pips-result">0</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>P/L ($)</h4>
+                            <div id="pnl-result">0.00</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>P/L (%)</h4>
+                            <div id="pnl-percent-result">0.00%</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>R/R Ratio</h4>
+                            <div id="rr-ratio">0.00</div>
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="form-group">
+                        <label for="notes"><i class="fas fa-edit"></i> Notes</label>
+                        <textarea id="notes" rows="3" placeholder="Trade analysis..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="submit-btn" class="btn-primary">
+                            <i class="fas fa-save"></i> Save Trade
+                        </button>
+                        <button type="button" id="cancel-edit" class="btn-secondary" style="display:none;">
+                            <i class="fas fa-times"></i> Cancel Edit
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Trade History Tab -->
+            <div id="trades" class="tab-content">
+                <div class="table-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="trade-search" placeholder="Search trades...">
+                    </div>
+                    <div class="export-buttons">
+                        <button id="export-excel" class="btn-secondary">
+                            <i class="fas fa-file-excel"></i> Export
+                        </button>
+                        <button id="import-excel" class="btn-secondary">
+                            <i class="fas fa-file-import"></i> Import
+                        </button>
+                        <input type="file" id="file-input" accept=".xlsx,.xls,.csv" style="display:none;">
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="trades-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Pair</th>
+                                <th>Type</th>
+                                <th>Entry</th>
+                                <th>Exit</th>
+                                <th>Pips</th>
+                                <th>P/L $</th>
+                                <th>P/L %</th>
+                                <th>R/R</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trades-list">
+                            <!-- Trades will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Statistics Tab -->
+            <div id="stats" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="win-rate">0%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-trades">0</div>
+                        <div class="stat-label">Total Trades</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-pnl">$0.00</div>
+                        <div class="stat-label">Total P/L</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="profit-factor">0.00</div>
+                        <div class="stat-label">Profit Factor</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="monthly-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- P/L Calendar Tab -->
+            <div id="calendar" class="tab-content">
+                <div class="calendar-header">
+                    <button id="prev-month"><i class="fas fa-chevron-left"></i></button>
+                    <h2 id="current-month">Month Year</h2>
+                    <button id="next-month"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="calendar-grid" id="pl-calendar">
+                    <!-- Calendar will be generated here -->
+                </div>
+                <div class="calendar-legend">
+                    <div><span class="legend-profit"></span> Profit</div>
+                    <div><span class="legend-loss"></span> Loss</div>
+                    <div><span class="legend-breakeven"></span> Break Even</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
